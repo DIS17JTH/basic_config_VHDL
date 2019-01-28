@@ -1,0 +1,65 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all; --Addition utan tecken
+
+entity lab_2 is
+	port(
+			sw : in std_logic_vector(9 downto 0);
+			key_n : in std_logic_vector(3 downto 0);
+			ledr : out std_logic_vector(9 downto 0);
+			ledg_sum : out std_logic_vector(3 downto 0));
+end entity lab_2;
+
+architecture lab_2_rtl of lab_2 is
+
+--signal s_axb : std_logic_vector(2 downto 0);
+--signal s_axbxc : std_logic_vector(2 downto 0);
+--signal s_carry : std_logic_vector(3 downto 0);
+
+signal s_clk : std_logic;
+signal s_reset : std_logic;
+signal s_in3bit1 : std_logic_vector(2 downto 0);
+signal s_in3bit2 : std_logic_vector(2 downto 0);
+
+
+begin
+	s_in3bit1(0) <= sw(0);
+	s_in3bit1(1) <= sw(1);
+	s_in3bit1(2) <= sw(2);
+	
+	s_in3bit2(0) <= sw(3);
+	s_in3bit2(1) <= sw(4);
+	s_in3bit2(2) <= sw(5);
+	
+	s_clk <= not key_n(0);
+	s_reset <= not  key_n(1);
+	
+	p_adder : process(s_clk, s_reset)
+	begin
+		--s_carry(0) <= '0';
+		--s_axb(0) <= sw(0) xor sw(3);
+		--s_axbxc(0) <= s_axb(0) xor s_carry(0);
+		--s_carry(1) <= (s_axb(0) and s_carry(0)) or (sw(0) and sw(3));
+	
+		--s_axb(1) <= sw(1) xor sw(4);
+		--s_axbxc(1) <= s_axb(1) xor s_carry(1);
+		--s_carry(2) <= (s_axb(1) and s_carry(1)) or (sw(1) and sw(4));
+
+		--s_axb(2) <= sw(2) xor sw(5);
+		--s_axbxc(2) <= s_axb(2) xor s_carry(2);
+		--s_carry(3) <= (s_axb(2) and s_carry(2)) or (sw(2) and sw(5));
+
+		ledr <= "0000" & s_in3bit2 & s_in3bit1;
+		
+		if s_reset = '1' then
+			--ledr <= "0000000000";
+			ledg_sum <= "0000";
+		elsif rising_edge(s_clk)then
+			--ledr(0) <= s_axbxc(0);
+			--ledr(1) <= s_axbxc(1);
+			--ledr(2) <= s_axbxc(2);
+			--ledr(3) <= s_carry(3);
+			ledg_sum <= ('0' & s_in3bit1) + ('0' & s_in3bit2);
+		end if;
+	end process p_adder;
+end architecture lab_2_rtl;
